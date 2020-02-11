@@ -1,0 +1,21 @@
+<section class="login">
+  <v-form>
+    <v-row no-gutters>
+      <v-col cols="6">
+        <v-text-field v-model="username" label="Username" :error-messages="getUsernameErrors()" maxlength="50" @keyup.enter="login" :disabled="isLoading"/>
+      </v-col>
+      <v-col cols="6">
+        <v-text-field v-model="password" label="Senha" :error-messages="getPasswordErrors()" maxlength="50" @keyup.enter="login" :disabled="isLoading"/>
+      </v-col>
+    </v-row>
+  </v-form>
+
+  <v-row class="bottom-bar" align="center" justify="center">
+    <v-col cols="2">
+      <v-btn color="primary" @click="login" :disabled="!username || !password || isLoading" id="login" width="100%">
+        <v-icon>check_circle</v-icon>
+        Login
+      </v-btn>
+    </v-col>
+  </v-row>
+</section>

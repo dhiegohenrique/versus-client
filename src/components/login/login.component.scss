@@ -1,0 +1,20 @@
+.login {
+  margin-top: 20px;
+
+  .v-icon {
+    margin-right: 5px;
+  }
+
+  .v-form {
+    .row {
+      .col:last-child {
+        padding-left: 20px;
+      }
+    }
+  }
+
+  .bottom-bar {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+}
