@@ -1,5 +1,5 @@
-import LoadingModal from '@/components/loading-modal/index'
-import Toast from '@/components/toast/index'
+import LoadingModal from '@/components/loading-modal'
+import Toast from '@/components/toast'
 
 export default {
   name: 'app',
