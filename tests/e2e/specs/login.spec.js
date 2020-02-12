@@ -8,6 +8,7 @@ const username = 'ViRRO'
 const password = '12345678'
 
 module.exports = {
+  '@disabled': true,
   beforeEach: (browser) => {
     browser
       .refresh()
