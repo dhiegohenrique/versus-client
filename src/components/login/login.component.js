@@ -1,15 +1,17 @@
 import { required, minLength } from 'vuelidate/lib/validators'
 import { validationMixin } from 'vuelidate'
+import loginMixin from '@/shared/mixins/login.mixin'
 
 export default {
   name: 'address-form',
   mixins: [
-    validationMixin
+    validationMixin,
+    loginMixin
   ],
   data () {
     return {
-      username: '',
-      password: '',
+      username: 'ViRRO',
+      password: '12345678',
       isLoading: false
     }
   },
@@ -24,16 +26,25 @@ export default {
     }
   },
   methods: {
-    login () {
-      // this.$root.$emit('showLoading')
+    async login () {
       this.$v.$touch()
       if (this.$v.$invalid) {
         return
       }
 
-      // eslint-disable-next-line no-console
-      console.log('validou login')
-      this.isLoading = true
+      try {
+        this.$root.$emit('showLoading')
+        this.isLoading = true
+        const res = await this.requestLogin({ username: this.username, password: this.password })
+        // eslint-disable-next-line no-console
+        console.log('res: ' + JSON.stringify(res.data))
+        this.saveUser(res.data)
+        // window.location = `${window.location.origin}/logged`
+        this.$router.push('/home-logged')
+      } finally {
+        this.$root.$emit('hideLoading')
+        this.isLoading = false
+      }
     },
     clear () {
       this.username = ''
