@@ -1,17 +1,23 @@
 import AuthService from '@/shared/services/auth.service'
+import moment from 'moment'
 
 export default {
   name: 'toolbar',
   data () {
     return {
       authService: AuthService(),
-      username: ''
+      username: '',
+      wallet: 0,
+      date: null
     }
   },
-  props: {
-    wallet: {
-      type: Number,
-      default: 0
+  computed: {
+    formattedDate () {
+      if (!this.date) {
+        return
+      }
+
+      return moment(this.date).format('DD/MM/YYYY HH:mm:ss')
     }
   },
   mounted () {
@@ -20,6 +26,12 @@ export default {
   methods: {
     logout () {
       this.$router.push('/')
+    },
+    updateWallet (wallet) {
+      this.wallet = wallet
+    },
+    updateDate (date) {
+      this.date = date
     }
   }
 }

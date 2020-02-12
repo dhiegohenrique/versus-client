@@ -2,7 +2,10 @@
   <v-toolbar fixed>
     Olá, <b>{{username}}</b>
     <v-spacer></v-spacer>
-    <span class="wallet">Carteira: <b>{{wallet}}</b></span>
+    <section class="items">
+      <span>{{formattedDate}}</span>
+      <span>Carteira: <b>{{wallet}}</b></span>
+    </section>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
         <v-btn icon v-on="on" @click="logout">
