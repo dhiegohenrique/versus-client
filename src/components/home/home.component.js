@@ -48,7 +48,7 @@ export default {
     this.socket.on('connect', (data) => {
       // eslint-disable-next-line no-console
       console.log('conectou: ')
-      this.socket.emit('authentication', { token: token })
+      this.socket.emit('authentication', { token })
 
       // this.socket.emit('authentication', token)
       this.socket.on('authenticated', function (data) {
