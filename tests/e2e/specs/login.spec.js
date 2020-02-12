@@ -21,5 +21,13 @@ module.exports = {
       .waitForElementVisible(xpathUsername)
       .waitForElementVisible(xpathPassword)
       .assert.disabledProp(xpathLogin, true)
-  }
+  },
+
+  'Should disabled login button when username is null': function (browser) {
+    browser
+      .waitForElementVisible(xpathUsername)
+      .assert.disabledProp(xpathLogin, true)
+  },
+
+  
 }
