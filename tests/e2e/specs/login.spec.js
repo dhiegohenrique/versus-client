@@ -48,13 +48,14 @@ module.exports = {
     await validateMinLength(browser, xpathPassword)
   },
 
-  'Should show a message when password is incorrect': function (browser) {
-    browser
-      .sendKeys(xpathUsername, 'ViRRO')
-      .sendKeys(xpathPassword, '1234asdfasdf')
-      .click(xpathLogin)
-      .waitForElementVisible(xpathToast)
-      .expect.element(xpathToast).to.be.visible
+  'Should show a message when password is incorrect': !async function (browser) {
+    await browser.sendKeys(xpathUsername, 'ViRRO')
+    await validateUsernameOrPassword(browser, xpathPassword)
+  },
+
+  'Should show a message when username is incorrect': async function (browser) {
+    await browser.sendKeys(xpathPassword, '12345678')
+    await validateUsernameOrPassword(browser, xpathUsername)
   },
 }
 
@@ -66,6 +67,19 @@ const validateMinLength = (browser, xpath) => {
 
     browser
       .expect.element(xpathErrorMinLength).to.be.visible
+
+    resolve()
+  })
+}
+
+const validateUsernameOrPassword = (browser, xpath) => {
+  return new Promise(async (resolve) => {
+    await browser.sendKeys(xpath, '123asdfa1243')
+    await browser.click(xpathLogin)
+    await browser.waitForElementVisible(xpathToast)
+
+    browser
+      .expect.element(xpathToast).to.be.visible
 
     resolve()
   })
