@@ -1,5 +1,5 @@
-import Logo from '@/components/logo/index'
-import Login from '@/components/login/index'
+import Logo from '@/components/logo'
+import Login from '@/components/login'
 
 export default {
   name: 'home',
