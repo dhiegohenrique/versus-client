@@ -1,14 +1,14 @@
+import LoginComponent from '@/components/login'
 import HomeComponent from '@/components/home'
-import HomeLoggedComponent from '@/components/home-logged'
 
 const routes = [
   {
     path: '/',
-    component: HomeComponent
+    component: LoginComponent
   },
   {
-    path: '/logged',
-    component: HomeLoggedComponent
+    path: '/home',
+    component: HomeComponent
   },
   {
     path: '*',
