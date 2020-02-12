@@ -40,7 +40,7 @@ export default {
         console.log('res: ' + JSON.stringify(res.data))
         this.saveUser(res.data)
         // window.location = `${window.location.origin}/logged`
-        this.$router.push('/home-logged')
+        this.$router.push('/logged')
       } finally {
         this.$root.$emit('hideLoading')
         this.isLoading = false
