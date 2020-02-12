@@ -18,7 +18,7 @@ module.exports = {
       .refresh()
   },
 
-  'Should show logo': function (browser) {
+  'Should show logo': !function (browser) {
     const xpathSection = '//section[contains(@class, "logo")]'
     const xpathLogo = `${xpathSection}//*[@id="logo"]`
 
@@ -27,6 +27,24 @@ module.exports = {
       .expect.element(xpathLogo).to.be.visible
   },
 
+  'Should show toolbar': !function (browser) {
+    const xpathSection = '//section[contains(@class, "toolbar")]'
+    const xpathUsername = `${xpathSection}//span[@id="username" and contains(text(), "ViRRO")]`
+    const xpathWallet = `${xpathSection}//span[@id="wallet"]`
+    const xpathLogout = '//*[@id="logout"]'
+
+    browser
+      .waitForElementVisible(xpathUsername)
+      .expect.element(xpathUsername).to.be.visible
+
+    browser
+      .waitForElementVisible(xpathWallet)
+      .expect.element(xpathWallet).text.which.matches(new RegExp('carteira', 'i'))
+
+    browser
+      .waitForElementVisible(xpathLogout)
+      .expect.element(xpathLogout).to.be.visible
+  },
 }
 
 const validateMinLength = (browser, xpath) => {

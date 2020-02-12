@@ -1,14 +1,14 @@
 <section class="toolbar">
   <v-toolbar fixed>
-    Olá, <b>{{username}}</b>
+    Olá, <span id="username" class="username">{{username}}</span>
     <v-spacer></v-spacer>
     <section class="items">
       <span>{{formattedDate}}</span>
-      <span>Carteira: <b>{{wallet}}</b></span>
+      <span id="wallet">Carteira: <b>{{wallet}}</b></span>
     </section>
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
-        <v-btn icon v-on="on" @click="logout">
+        <v-btn icon v-on="on" @click="logout" id="logout">
           <v-icon>exit_to_app</v-icon>
         </v-btn>
       </template>
