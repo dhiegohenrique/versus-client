@@ -7,8 +7,8 @@ const mixin = {
     }
   },
   methods: {
-    requestGet (url) {
-      return this.baseService.get(url)
+    requestGet (url, hasToken = false) {
+      return this.baseService.get(url, hasToken)
     },
     requestPost (url, data) {
       return this.baseService.post(url, data)

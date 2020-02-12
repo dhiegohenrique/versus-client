@@ -1,0 +1,18 @@
+<section class="toolbar">
+  <v-toolbar fixed>
+    Olá, <b>{{username}}</b>
+    <v-spacer></v-spacer>
+    <section class="items">
+      <span>{{formattedDate}}</span>
+      <span>Carteira: <b>{{wallet}}</b></span>
+    </section>
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn icon v-on="on" @click="logout">
+          <v-icon>exit_to_app</v-icon>
+        </v-btn>
+      </template>
+      <span>Sair</span>
+    </v-tooltip>
+  </v-toolbar>
+</section>

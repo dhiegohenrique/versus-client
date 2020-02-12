@@ -41,8 +41,10 @@ export default {
         this.$root.$emit('showLoading')
         this.isLoading = true
         const res = await this.requestLogin({ username: this.username, password: this.password })
-        this.authService.saveUser(res.data)
-        this.$router.push('/logged')
+        const user = res.data
+        user.username = this.username
+        this.authService.saveUser(user)
+        this.$router.push('/home')
       } finally {
         this.$root.$emit('hideLoading')
         this.isLoading = false

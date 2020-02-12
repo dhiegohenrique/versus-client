@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Vue from 'vue'
 import AuthService from '@/shared/services/auth.service'
-import HttpStatus from 'http-status-codes'
+// import HttpStatus from 'http-status-codes'
 
 const showToast = () => {
   const message = 'Ocorreu um erro. Tente novamente mais tarde.'
@@ -37,17 +37,19 @@ class BaseService {
   getClient () {
     const client = axios.create({
       baseURL: '',
-      timeout: 60000
+      timeout: 60000 * 2
     })
 
     client.interceptors.response.use((response) => {
       return response
     }, (error) => {
-      const response = JSON.parse(JSON.stringify(error)).response
-      if (response && response.status === HttpStatus.UNAUTHORIZED) {
-        window.location = window.location.origin
-        return
-      }
+      const response = JSON.parse(JSON.stringify(error))
+      // eslint-disable-next-line no-console
+      console.log('response: ' + JSON.stringify(response))
+      // if (response && response.status === HttpStatus.UNAUTHORIZED) {
+      //   window.location = window.location.origin
+      //   return
+      // }
 
       showToast()
       return Promise.reject(error)
@@ -56,7 +58,7 @@ class BaseService {
     return client
   }
 
-  get (url, hasToken) {
+  get (url, hasToken = false) {
     const options = {}
     if (hasToken) {
       const token = this.authService.getToken()
@@ -65,7 +67,7 @@ class BaseService {
       }
     }
 
-    return this.client.get(url)
+    return this.client.get(url, options)
   }
 
   post (url, data) {
