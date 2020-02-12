@@ -1,6 +1,7 @@
 import { required, minLength } from 'vuelidate/lib/validators'
 import { validationMixin } from 'vuelidate'
 import loginMixin from '@/shared/mixins/login.mixin'
+import AuthService from '@/shared/services/auth.service'
 
 export default {
   name: 'address-form',
@@ -12,7 +13,8 @@ export default {
     return {
       username: 'ViRRO',
       password: '12345678',
-      isLoading: false
+      isLoading: false,
+      authService: AuthService()
     }
   },
   validations: {
@@ -25,6 +27,9 @@ export default {
       minLength: minLength(3)
     }
   },
+  mounted () {
+    this.authService.removeUser()
+  },
   methods: {
     async login () {
       this.$v.$touch()
@@ -36,10 +41,7 @@ export default {
         this.$root.$emit('showLoading')
         this.isLoading = true
         const res = await this.requestLogin({ username: this.username, password: this.password })
-        // eslint-disable-next-line no-console
-        console.log('res: ' + JSON.stringify(res.data))
-        this.saveUser(res.data)
-        // window.location = `${window.location.origin}/logged`
+        this.authService.saveUser(res.data)
         this.$router.push('/logged')
       } finally {
         this.$root.$emit('hideLoading')
