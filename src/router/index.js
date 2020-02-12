@@ -4,5 +4,13 @@ import routes from './routes'
 
 Vue.use(VueRouter)
 
-const router = new VueRouter({ routes })
+const router = new VueRouter({ mode: 'history', routes })
+
+router.beforeEach((to, from, next) => {
+  // if (to.meta.requiresAuth && !authService.isAuthenticated()) {
+  //   return next('/')
+  // }
+
+  next()
+})
 export default router
