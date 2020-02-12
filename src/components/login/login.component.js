@@ -46,7 +46,7 @@ export default {
         this.authService.saveUser(user)
         this.$router.push('/home')
       } catch {
-        this.$root.$emit('showToast', 'Username ou senha inválidos.')
+        this.$root.$emit('showToast', 'Username ou senha incorretos.')
       } finally {
         this.$root.$emit('hideLoading')
         this.isLoading = false
