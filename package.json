@@ -12,8 +12,13 @@
     "axios": "^0.19.1",
     "core-js": "^3.4.4",
     "express": "^4.17.1",
+    "http-status-codes": "^1.4.0",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
+    "socketio-wildcard": "^2.0.0",
     "vue": "^2.6.10",
     "vue-router": "^3.1.5",
+    "vue-socket.io": "^3.0.7",
     "vue-toasted": "^1.1.27",
     "vuelidate": "^0.7.5",
     "vuetify": "^2.2.4"
