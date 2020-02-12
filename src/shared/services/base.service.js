@@ -1,5 +1,7 @@
 import axios from 'axios'
 import Vue from 'vue'
+import AuthService from '@/shared/services/auth.service'
+import HttpStatus from 'http-status-codes'
 
 const showToast = () => {
   const message = 'Ocorreu um erro. Tente novamente mais tarde.'
@@ -29,6 +31,7 @@ class BaseService {
 
   constructor () {
     this.client = this.getClient()
+    this.authService = AuthService()
   }
 
   getClient () {
@@ -40,6 +43,12 @@ class BaseService {
     client.interceptors.response.use((response) => {
       return response
     }, (error) => {
+      const response = JSON.parse(JSON.stringify(error)).response
+      if (response && response.status === HttpStatus.UNAUTHORIZED) {
+        window.location = window.location.origin
+        return
+      }
+
       showToast()
       return Promise.reject(error)
     })
@@ -47,7 +56,15 @@ class BaseService {
     return client
   }
 
-  get (url) {
+  get (url, hasToken) {
+    const options = {}
+    if (hasToken) {
+      const token = this.authService.getToken()
+      options.headers = {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
     return this.client.get(url)
   }
 
