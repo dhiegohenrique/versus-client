@@ -1,9 +1,3 @@
-const b64 = require('base64-async')
-const path = require('path')
-const fs = require('fs')
-const axios = require('axios')
-const util = require('util')
-const readFile = util.promisify(fs.readFile)
 const xpathSection = '//section[contains(@class, "login")]'
 const xpathUsername = `${xpathSection}//*[@id="username"]`
 const xpathPassword = `${xpathSection}//*[@id="password"]`
@@ -19,7 +13,7 @@ module.exports = {
       .waitForElementVisible(xpathPassword)
   },
 
-  'Should disabled login button when username and password is null': function (browser) {
+  'Should disabled login button when username and password is null': !function (browser) {
     browser
       .assert.disabledProp(xpathLogin, true)
   },
@@ -43,12 +37,26 @@ module.exports = {
       .assert.disabledProp(xpathLogin, false)
   },
 
-  'Should show a message when username length less than 3 characters': function (browser) {
-    browser
-      .sendKeys(xpathUsername, 'a')
-      .sendKeys(xpathPassword, 'a')
-      .click(xpathLogin)
-      .waitForElementVisible(xpathErrorMinLength)
-      .expect.element(xpathErrorMinLength).to.be.visible
+  'Should show a message when username length less than 3 characters': async function (browser) {
+    await browser.sendKeys(xpathPassword, 'abcd')
+    await validateMinLength(browser, xpathUsername)
   },
+
+  'Should show a message when password length less than 3 characters': async function (browser) {
+    await browser.sendKeys(xpathUsername, 'abcd')
+    await validateMinLength(browser, xpathPassword)
+  },
+}
+
+const validateMinLength = (browser, xpath) => {
+  return new Promise(async (resolve) => {
+    await browser.sendKeys(xpath, 'a')
+    await browser.click(xpathLogin)
+    await browser.waitForElementVisible(xpathErrorMinLength)
+
+    browser
+      .expect.element(xpathErrorMinLength).to.be.visible
+
+    resolve()
+  })
 }
