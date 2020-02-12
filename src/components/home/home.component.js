@@ -1,5 +1,7 @@
 import Logo from '@/components/logo'
-import Login from '@/components/login'
+import Toolbar from '@/components/toolbar'
+import userMixin from '@/shared/mixins/user.mixin'
+import AuthService from '@/shared/services/auth.service'
 import io from 'socket.io-client'
 var patch = require('socketio-wildcard')(io.Manager)
 
@@ -7,11 +9,19 @@ export default {
   name: 'home',
   components: {
     Logo,
-    Login
+    Toolbar
   },
+  mixins: [
+    userMixin
+  ],
   data () {
     return {
-      event: 'authentication'
+      event: 'authentication',
+      authService: AuthService(),
+      username: '',
+      fields: [],
+      isLoading: false,
+      wallet: 0
     }
   },
   destroyed () {
@@ -19,31 +29,12 @@ export default {
     this.socket.disconnect()
   },
   mounted () {
-    // const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijk5NjA4ZmUxMTAzZmFjMDExMzhjNjcwYWY3ZjdhNTVkODQ2YTI2N2VlMGZkNjBmMjMyYTYwNmUyYjdhYWNmMzk0MDBhMzcwOTU4MjEwYWE4In0.eyJhdWQiOiJWaVJSTyIsImp0aSI6Ijk5NjA4ZmUxMTAzZmFjMDExMzhjNjcwYWY3ZjdhNTVkODQ2YTI2N2VlMGZkNjBmMjMyYTYwNmUyYjdhYWNmMzk0MDBhMzcwOTU4MjEwYWE4IiwiaWF0IjoxNTgxNDY4MDc0LCJuYmYiOjE1ODE0NjgwNzQsImV4cCI6MTU4MTU1NDQ3Mywic3ViIjoiVmlSUk8iLCJzY29wZXMiOlsidXNlciJdfQ.Fx1yfLFqdF7To6YfDVlJ7PaHJ2cBpfOmd1Fncfhy8HXYNlJOV1NOCag_v6LDqJhC9sx3C4Ow747mbj4cdhHCL5c5pZBI-iQB8OfXbgkCEfzFkJdkFf580UpUdXKfZL_mB_dnMJGLA7v2D9cTAV7bUHzv94tAZ03Bgvp3DFxhuaYz55eRll2ISdP466c1gZi0MayoXMrhnN8a0QllhVudYtpqspjKONzfxwg_h9GpMyPg9pomH6Ti7LEg9cSMT_xDFXUcyT1UBv3N2d0EdYumrxgE5Lnl0lU67Z5E6hspqXDWAXT9g85jX7r3xWcq6m4Wglfj_8w2TnldfVDdKN7l3Q'
-    const token = JSON.parse(localStorage.getItem('user')).access_token
-    const url = process.env.VUE_APP_URL_SOCKET
-    // eslint-disable-next-line no-console
-    console.log('url: ' + url)
+    this.username = this.authService.getUsername()
+    this.loadUser()
 
-    this.socket = io(url)
-
-    // this.socket = io(url, {
-    //   query: 'token=' + token
-    // })
-
-    // this.socket = io(url, {
-    //   query: {
-    //     Token: token
-    //   }
-    // })
+    const token = this.authService.getToken()
+    this.socket = io(process.env.VUE_APP_URL_SOCKET)
     patch(this.socket)
-
-    // eslint-disable-next-line no-console
-    // console.log('envia: ' + token)
-    // this.socket.send(`/${this.event}`, token)
-    // this.socket.send(token)
-    // this.socket.send(this.event)
-    // this.socket.send(this.event, token)
 
     this.socket.on('connect', (data) => {
       // eslint-disable-next-line no-console
@@ -71,5 +62,57 @@ export default {
         console.log('autenticou !!!!')
       })
     })
+  },
+  methods: {
+    async loadUser () {
+      try {
+        this.fields.push({
+          label: 'Username',
+          value: this.username
+        })
+
+        this.isLoading = true
+        const res = await this.getUser()
+        const user = res.data
+        const { steam: { displayName }, tournamententries } = user
+        this.wallet = user.wallet
+
+        this.fields.push({
+          label: 'Steam account',
+          value: displayName
+        })
+
+        // {
+        //   label: 'Riot account',
+        //   value: 'riotAccount'
+        // },
+
+        const tournament = {
+          label: 'Campeonatos',
+          value: 'Nenhum campeonato'
+        }
+
+        if (tournamententries && tournamententries.length) {
+          const values = tournamententries.map((tournamentEntry) => {
+            return tournamentEntry.tournament_id
+          })
+
+          tournament.value = values.join('<br/>')
+        }
+
+        this.fields.push(tournament)
+
+        // eslint-disable-next-line no-console
+        console.log('displayName: ' + displayName)
+        // eslint-disable-next-line no-console
+        console.log('user: ' + JSON.stringify(res.data))
+      } finally {
+        this.isLoading = false
+      }
+    },
+    logout () {
+      // eslint-disable-next-line no-console
+      console.log('sair')
+    }
   }
 }

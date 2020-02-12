@@ -1,2 +1,25 @@
 .home {
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  .v-list-item {
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    .text-left {
+      padding-left: 10px;
+    }
+
+    .text-right {
+      padding-right: 10px;
+    }
+  }
+
+  .background-color {
+    background: #eeeeee;
+  }
+
+  .toolbar {
+    margin-bottom: 20px;
+  }
 }
