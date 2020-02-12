@@ -1,6 +1,7 @@
 const waitTime = 60000 * 2
 
 module.exports = {
+  '@disabled': true,
   before: (browser) => {
     const loginPage = browser.page.login()
     loginPage.login()
