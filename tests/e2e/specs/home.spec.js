@@ -1,11 +1,4 @@
-const xpathSection = '//section[contains(@class, "login")]'
-const xpathUsername = `${xpathSection}//*[@id="username"]`
-const xpathPassword = `${xpathSection}//*[@id="password"]`
-const xpathLogin = `${xpathSection}//*[@id="login"]`
-const xpathErrorMinLength = '//div[contains(@class, "v-messages__message") and contains(text(), "Insira pelo menos 3 caracteres")]'
-const xpathToast = `//div[contains(@class, "toasted-container")]//div[contains(@class, "toasted") and contains(text(), "Username ou senha incorretos.")]//i[contains(text(), "info")]`
-const username = 'ViRRO'
-const password = '12345678'
+const waitTime = 60000 * 2
 
 module.exports = {
   before: (browser) => {
@@ -18,7 +11,7 @@ module.exports = {
       .refresh()
   },
 
-  'Should show logo': !function (browser) {
+  'Should show logo': function (browser) {
     const xpathSection = '//section[contains(@class, "logo")]'
     const xpathLogo = `${xpathSection}//*[@id="logo"]`
 
@@ -27,7 +20,7 @@ module.exports = {
       .expect.element(xpathLogo).to.be.visible
   },
 
-  'Should show toolbar': !function (browser) {
+  'Should show toolbar': function (browser) {
     const xpathSection = '//section[contains(@class, "toolbar")]'
     const xpathUsername = `${xpathSection}//span[@id="username" and contains(text(), "ViRRO")]`
     const xpathWallet = `${xpathSection}//span[@id="wallet"]`
@@ -45,17 +38,54 @@ module.exports = {
       .waitForElementVisible(xpathLogout)
       .expect.element(xpathLogout).to.be.visible
   },
-}
 
-const validateMinLength = (browser, xpath) => {
-  return new Promise(async (resolve) => {
-    await browser.sendKeys(xpath, 'a')
-    await browser.click(xpathLogin)
-    await browser.waitForElementVisible(xpathErrorMinLength)
+  'Should show user data': function (browser) {
+    const xpathFieldsLeft = '//div[contains(@class, "text-left")]'
+    const xpathFieldsRight = '//div[contains(@class, "text-right")]'
+
+    const fields = [
+      'Username',
+      'Steam account',
+      'Riot account',
+      'Campeonatos'
+    ]
 
     browser
-      .expect.element(xpathErrorMinLength).to.be.visible
+      .waitForElementNotPresent('//div[contains(@class, "v-progress-linear")]', waitTime)
+      .perform((done) => {
+        browser
+          .elements('xpath', xpathFieldsLeft, (elements) => {
+            elements.value.forEach((el, index) => {
+              browser
+                .elementIdText(el.ELEMENT, (result) => {
+                  const text = result.value.trim()
+                  const label = fields[index]
+                  browser
+                    .assert.ok(text === label, `Should field has text: '${label}'`)
 
-    resolve()
-  })
+                  if (index === (elements.value.length - 1)) {
+                    done()
+                  }
+                })
+            })
+          })
+      })
+      .perform((done) => {
+        browser
+          .elements('xpath', xpathFieldsRight, (elements) => {
+            elements.value.forEach((el, index) => {
+              browser
+                .elementIdText(el.ELEMENT, (result) => {
+                  const text = result.value.trim()
+                  browser
+                    .assert.ok(text.length > 0, `Should field '${fields[index]}' has text`)
+
+                  if (index === (elements.value.length - 1)) {
+                    done()
+                  }
+                })
+            })
+          })
+      })
+  }
 }
