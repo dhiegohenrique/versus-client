@@ -29,5 +29,9 @@ module.exports = {
       .assert.disabledProp(xpathLogin, true)
   },
 
-  
+  'Should disabled login button when password is null': function (browser) {
+    browser
+      .waitForElementVisible(xpathPassword)
+      .assert.disabledProp(xpathLogin, true)
+  },
 }
