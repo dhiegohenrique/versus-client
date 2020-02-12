@@ -24,6 +24,11 @@ class AuthService {
     return user ? user.access_token : ''
   }
 
+  getUsername () {
+    const user = this.localStorageService.get('user')
+    return user ? user.username : ''
+  }
+
   getUser () {
     return this.localStorageService.get('user')
   }
