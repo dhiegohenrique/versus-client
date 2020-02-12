@@ -1,4 +1,3 @@
-const waitTime = 60000 * 2
 const xpathSectionLogin = '//section[contains(@class, "login")]'
 const xpathLogout = '//*[@id="logout"]'
 
@@ -14,14 +13,22 @@ module.exports = {
       })
   },
 
-  'Should logout when click in logout button': !async function (browser) {
+  'Should logout when click in logout button': async function (browser) {
     await browser.click(xpathLogout)
     await validateLoginPage(browser)
     await validateLocalStorage(browser)
   },
 
-  'Should logout when back on navigation': async function (browser) {
+  'Should logout when click in back on navigation': async function (browser) {
     await browser.back()
+    await validateLoginPage(browser)
+    await validateLocalStorage(browser)
+  },
+
+  'Should logout when click in back and click in next on navigation': async function (browser) {
+    await browser.back()
+    await validateLoginPage(browser)
+    await browser.forward()
     await validateLoginPage(browser)
     await validateLocalStorage(browser)
   },
