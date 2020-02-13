@@ -1,3 +1,5 @@
+const clipboardy = require('clipboardy')
+const fastLoremIpsum = require('fast-lorem-ipsum')
 const xpathSection = '//section[contains(@class, "login")]'
 const xpathUsername = `${xpathSection}//*[@id="username"]`
 const xpathPassword = `${xpathSection}//*[@id="password"]`
@@ -65,25 +67,12 @@ module.exports = {
     await validateUsernameOrPassword(browser, xpathUsername)
   },
 
-  'Should allow max characters in fields': function (browser) {
-    const maxLength = 50
-    const fields = [
-      xpathUsername,
-      xpathPassword
-    ]
+  'Should allow max characters in fields': async function (browser) {
+    await validateMaxLength(browser, false)
+  },
 
-    browser
-      .perform((done) => {
-        fields.forEach((field, index) => {
-          browser
-            .setValueCustom(field, (maxLength + 1))
-            .assert.valueLength(field, maxLength)
-
-          if (index === (fields.length - 1)) {
-            done()
-          }
-        })
-      })
+  'Should allow max characters in fields on copy and paste': async function (browser) {
+    await validateMaxLength(browser, true)
   },
 
   'Should show home when login is successful': !function (browser) {
@@ -120,6 +109,65 @@ const validateUsernameOrPassword = (browser, xpath) => {
 
     browser
       .expect.element(xpathToast).to.be.visible
+
+    resolve()
+  })
+}
+
+const validateMaxLength = (browser, copyAndPaste) => {
+  return new Promise(async (resolve) => {
+    const maxLength = 50
+    const fields = [
+      {
+        xpath: xpathUsername,
+        value: fastLoremIpsum(maxLength + 1, 'c')
+      },
+      {
+        xpath: xpathPassword,
+        value: fastLoremIpsum(maxLength + 1, 'c')
+      }
+    ]
+
+    await browser
+      .perform((done) => {
+        fields.forEach(async (field, index) => {
+          const { xpath, value } = field
+
+          await browser
+            .perform(async (done) => {
+              if (!copyAndPaste) {
+                return done()
+              }
+
+              await clipboardy.write(value)
+              await browser.sendKeys(xpath, [browser.Keys.CONTROL, 'v'])
+              done()
+            })
+
+          await browser
+            .perform(async (done) => {
+              if (copyAndPaste) {
+                return done()
+              }
+
+              await browser.sendKeys(xpath, value)
+              done()
+            })
+
+          await browser
+            .perform(() => {
+              browser
+                .assert.valueLength(xpath, maxLength)
+            })
+
+          await browser
+            .perform(() => {
+              if (index === (fields.length - 1)) {
+                done()
+              }
+            })
+        })
+      })
 
     resolve()
   })
