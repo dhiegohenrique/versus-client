@@ -5,7 +5,9 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:e2e": "vue-cli-service test:e2e --parallel",
+    "test:e2e-login-logo": "vue-cli-service test:e2e --tag login --tag logo --parallel",
+    "test:e2e-home": "vue-cli-service test:e2e --tag home",
+    "test:e2e-logout": "vue-cli-service test:e2e --tag logout",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -37,6 +39,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^5.0.0",
+    "fast-lorem-ipsum": "^1.2.0",
     "geckodriver": "^1.19.1",
     "sass": "^1.25.0",
     "sass-loader": "^8.0.2",

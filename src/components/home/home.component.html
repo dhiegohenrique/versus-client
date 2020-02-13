@@ -2,7 +2,7 @@
   <toolbar ref="toolbar" />
 
   <v-row align="center" justify="center">
-    <v-col cols="8">
+    <v-col :cols="!isMobile ? '8' : '12'">
       <v-card :loading="isLoading">
         <v-list-item light v-for="(field, index) in fields" :key="'field'+index"
           :class="{'background-color': (index % 2 === 0)}">

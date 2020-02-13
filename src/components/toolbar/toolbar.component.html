@@ -1,18 +1,35 @@
 <section class="toolbar">
   <v-toolbar fixed>
-    Olá, <b>{{username}}</b>
-    <v-spacer></v-spacer>
-    <section class="items">
-      <span>{{formattedDate}}</span>
-      <span>Carteira: <b>{{wallet}}</b></span>
-    </section>
-    <v-tooltip bottom>
-      <template v-slot:activator="{ on }">
-        <v-btn icon v-on="on" @click="logout">
-          <v-icon>exit_to_app</v-icon>
-        </v-btn>
-      </template>
-      <span>Sair</span>
-    </v-tooltip>
+    <v-row no-gutters align="center">
+      <v-col cols="6">
+        Olá, <span id="username" class="username">{{username}}</span>
+      </v-col>
+      <v-col cols="6">
+        <v-row no-gutters align="center">
+          <v-col :cols="!isMobile ? '11' : '9'">
+            <v-row no-gutters>
+              <v-col cols="12" class="text-right padding-right">
+                <span id="wallet">Carteira: <b>{{wallet}}</b></span>
+              </v-col>
+            </v-row>
+          </v-col>
+          <v-col :cols="!isMobile ? '1' : '3'" class="text-right">
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn icon v-on="on" @click="logout" id="logout">
+                  <v-icon>exit_to_app</v-icon>
+                </v-btn>
+              </template>
+              <span>Sair</span>
+            </v-tooltip>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
   </v-toolbar>
+  <v-row no-gutters>
+    <v-col cols="12" class="text-right margin-top">
+      <span>{{formattedDate}}</span>
+    </v-col>
+  </v-row>
 </section>
