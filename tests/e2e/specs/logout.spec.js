@@ -2,6 +2,7 @@ const xpathSectionLogin = '//section[contains(@class, "login")]'
 const xpathLogout = '//*[@id="logout"]'
 
 module.exports = {
+  '@disabled': true,
   beforeEach: (browser) => {
     browser
       .perform(() => {
