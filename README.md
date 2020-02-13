@@ -42,3 +42,6 @@ docker run -it -p 8080:8080 --rm --name versus-client dhiego/versus-client
 ```
 
 Estará rodando em `http://localhost:8080/`
+
+## Client rodando em:
+`https://versus-code.herokuapp.com/`
