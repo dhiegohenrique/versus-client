@@ -1,15 +1,10 @@
 const waitTime = 60000 * 2
 
 module.exports = {
-  '@disabled': true,
+  '@tags': ['home'],
   before: (browser) => {
     const loginPage = browser.page.login()
     loginPage.login()
-  },
-
-  beforeEach: (browser) => {
-    browser
-      .refresh()
   },
 
   'Should show logo': function (browser) {
@@ -53,6 +48,7 @@ module.exports = {
 
     browser
       .waitForElementNotPresent('//div[contains(@class, "v-progress-linear")]', waitTime)
+      .waitForElementCount(xpathFieldsLeft, fields.length)
       .perform((done) => {
         browser
           .elements('xpath', xpathFieldsLeft, (elements) => {
@@ -71,6 +67,7 @@ module.exports = {
             })
           })
       })
+      .waitForElementCount(xpathFieldsRight, fields.length)
       .perform((done) => {
         browser
           .elements('xpath', xpathFieldsRight, (elements) => {

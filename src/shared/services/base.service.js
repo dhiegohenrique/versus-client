@@ -37,7 +37,7 @@ class BaseService {
   getClient () {
     const client = axios.create({
       baseURL: '',
-      timeout: 60000 * 2
+      timeout: 60000 * 3
     })
 
     client.interceptors.response.use((response) => {

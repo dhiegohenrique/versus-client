@@ -1,10 +1,19 @@
 const xpathSectionLogin = '//section[contains(@class, "login")]'
 const xpathLogout = '//*[@id="logout"]'
+let pauseTime
 
 module.exports = {
-  '@disabled': true,
+  '@tags': ['logout'],
   beforeEach: (browser) => {
     browser
+      .perform(async (done) => {
+        if (!pauseTime) {
+          return done()
+        }
+
+        await browser.pause(pauseTime)
+        done()
+      })
       .perform(() => {
         const loginPage = browser.page.login()
         loginPage.login()
@@ -18,12 +27,14 @@ module.exports = {
     await browser.click(xpathLogout)
     await validateLoginPage(browser)
     await validateLocalStorage(browser)
+    pauseTime = 5000
   },
 
   'Should logout when click in back on navigation': async function (browser) {
     await browser.back()
     await validateLoginPage(browser)
     await validateLocalStorage(browser)
+    pauseTime = 6000
   },
 
   'Should logout when click in back and click in next on navigation': async function (browser) {

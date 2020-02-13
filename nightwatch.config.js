@@ -8,7 +8,7 @@ module.exports = {
       desiredCapabilities: {
         chromeOptions: {
           args: [
-            // 'headless',
+            'headless',
             '--no-sandbox',
             '--lang=pt-br',
             '--incognito',

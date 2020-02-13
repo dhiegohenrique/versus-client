@@ -1,4 +1,3 @@
-const clipboardy = require('clipboardy')
 const fastLoremIpsum = require('fast-lorem-ipsum')
 const xpathSection = '//section[contains(@class, "login")]'
 const xpathUsername = `${xpathSection}//*[@id="username"]`
@@ -8,8 +7,10 @@ const xpathErrorMinLength = '//div[contains(@class, "v-messages__message") and c
 const xpathToast = `//div[contains(@class, "toasted-container")]//div[contains(@class, "toasted") and contains(text(), "Username ou senha incorretos.")]//i[contains(text(), "info")]`
 const username = 'ViRRO'
 const password = '12345678'
+const waitTime = 60000 * 3
 
 module.exports = {
+  '@tags': ['login'],
   beforeEach: (browser) => {
     browser
       .refresh()
@@ -18,51 +19,51 @@ module.exports = {
       .waitForElementVisible(xpathPassword)
   },
 
-  'Should disabled login button when username and password is null': !function (browser) {
+  'Should disabled login button when username and password is null': function (browser) {
     browser
       .assert.disabledProp(xpathLogin, true)
   },
 
-  'Should disabled login button when username is null': !function (browser) {
+  'Should disabled login button when username is null': function (browser) {
     browser
       .sendKeys(xpathPassword, 'a')
       .assert.disabledProp(xpathLogin, true)
   },
 
-  'Should disabled login button when password is null': !function (browser) {
+  'Should disabled login button when password is null': function (browser) {
     browser
       .sendKeys(xpathUsername, 'a')
       .assert.disabledProp(xpathLogin, true)
   },
 
-  'Should enable login button when username and password is not null': !function (browser) {
+  'Should enable login button when username and password is not null': function (browser) {
     browser
       .sendKeys(xpathUsername, 'a')
       .sendKeys(xpathPassword, 'a')
       .assert.disabledProp(xpathLogin, false)
   },
 
-  'Should show a message when username length less than 3 characters': !async function (browser) {
+  'Should show a message when username length less than 3 characters': async function (browser) {
     await browser.sendKeys(xpathPassword, 'abcd')
     await validateMinLength(browser, xpathUsername)
   },
 
-  'Should show a message when password length less than 3 characters': !async function (browser) {
+  'Should show a message when password length less than 3 characters': async function (browser) {
     await browser.sendKeys(xpathUsername, 'abcd')
     await validateMinLength(browser, xpathPassword)
   },
 
-  'Should show a message when password is incorrect': !async function (browser) {
+  'Should show a message when password is incorrect': async function (browser) {
     await browser.sendKeys(xpathUsername, username)
     await validateUsernameOrPassword(browser, xpathPassword)
   },
 
-  'Should show a message when username is incorrect': !async function (browser) {
+  'Should show a message when username is incorrect': async function (browser) {
     await browser.sendKeys(xpathPassword, password)
     await validateUsernameOrPassword(browser, xpathUsername)
   },
 
-  'Should show a message when username is incorrect': !async function (browser) {
+  'Should show a message when username is incorrect': async function (browser) {
     await browser.sendKeys(xpathPassword, password)
     await validateUsernameOrPassword(browser, xpathUsername)
   },
@@ -75,7 +76,7 @@ module.exports = {
     await validateMaxLength(browser, true)
   },
 
-  'Should show home when login is successful': !function (browser) {
+  'Should show home when login is successful': function (browser) {
     const xpathHome = '//section[contains(@class, "home")]'
 
     browser
@@ -83,7 +84,7 @@ module.exports = {
       .sendKeys(xpathPassword, password)
       .click(xpathLogin)
       .waitForLoadingModal()
-      .waitForElementVisible(xpathHome)
+      .waitForElementVisible(xpathHome, waitTime)
       .expect.element(xpathHome).to.be.visible
   }
 }
@@ -128,23 +129,29 @@ const validateMaxLength = (browser, copyAndPaste) => {
       }
     ]
 
-    await browser
+    browser
       .perform((done) => {
         fields.forEach(async (field, index) => {
           const { xpath, value } = field
 
-          await browser
+          browser
             .perform(async (done) => {
               if (!copyAndPaste) {
                 return done()
               }
 
-              await clipboardy.write(value)
-              await browser.sendKeys(xpath, [browser.Keys.CONTROL, 'v'])
+              await browser.sendKeys(xpathUsername, value.substring(0, 20))
+              await browser.sendKeys(xpathUsername, [browser.Keys.CONTROL, 'a'])
+              await browser.sendKeys(xpathUsername, [browser.Keys.CONTROL, 'x'])
+
+              for (let index = 0;index < 5;index++) {
+                await browser.sendKeys(xpath, [browser.Keys.CONTROL, 'v'])
+              }
+
               done()
             })
 
-          await browser
+          browser
             .perform(async (done) => {
               if (copyAndPaste) {
                 return done()
@@ -154,13 +161,13 @@ const validateMaxLength = (browser, copyAndPaste) => {
               done()
             })
 
-          await browser
+          browser
             .perform(() => {
               browser
                 .assert.valueLength(xpath, maxLength)
             })
 
-          await browser
+          browser
             .perform(() => {
               if (index === (fields.length - 1)) {
                 done()
@@ -169,6 +176,9 @@ const validateMaxLength = (browser, copyAndPaste) => {
         })
       })
 
-    resolve()
+    browser
+      .perform(() => {
+        resolve()
+      })
   })
 }

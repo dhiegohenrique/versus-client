@@ -8,7 +8,7 @@ const xpathSection = '//section[contains(@class, "logo")]'
 const xpathLogo = `${xpathSection}//*[@id="logo"]`
 
 module.exports = {
-  '@disabled': true,
+  '@tags': ['logo'],
   beforeEach: (browser) => {
     browser
       .refresh()

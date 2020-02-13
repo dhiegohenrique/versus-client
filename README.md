@@ -23,7 +23,9 @@ Estará rodando em `http://localhost:8080/`
 
 ### Para executar os testes
 ```
-npm run test:e2e
+npm run test:e2e-login-logo
+npm run test:e2e-home
+npm run test:e2e-logout
 ```
 
 Para rodar pelo Docker:
