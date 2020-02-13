@@ -2,11 +2,11 @@
   <v-card>
     <v-form>
       <v-row no-gutters>
-        <v-col cols="6">
+        <v-col :cols="!isMobile ? '6' : '12'">
           <v-text-field v-model="username" id="username" label="Username" :error-messages="getUsernameErrors()" maxlength="50"
             @keyup.enter="login" :disabled="isLoading" />
         </v-col>
-        <v-col cols="6">
+        <v-col :cols="!isMobile ? '6' : '12'">
           <v-text-field v-model="password" id="password" label="Senha" :error-messages="getPasswordErrors()" maxlength="50"
             @keyup.enter="login" :disabled="isLoading" />
         </v-col>
@@ -14,7 +14,7 @@
     </v-form>
 
     <v-row class="bottom-bar" align="center" justify="center">
-      <v-col cols="2">
+      <v-col :cols="!isMobile ? '2' : '10'">
         <v-btn color="primary" @click="login" :disabled="!username || !password || isLoading" id="login" width="100%">
           <v-icon>check_circle</v-icon>
           Login

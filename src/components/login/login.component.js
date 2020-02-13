@@ -11,8 +11,8 @@ export default {
   ],
   data () {
     return {
-      username: '',
-      password: '',
+      username: 'ViRRO',
+      password: '12345678',
       isLoading: false,
       authService: AuthService()
     }

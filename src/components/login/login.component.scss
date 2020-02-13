@@ -8,7 +8,35 @@
   .v-form {
     .row {
       .col:last-child {
-        padding-left: 20px;
+        @media (max-width: 600px) {
+          //xs
+
+          padding-left: 0px;
+        }
+
+        @media (min-width: 600px) {
+          //sm
+
+          padding-left: 0px;
+        }
+
+        @media (min-width: 960px) {
+          //md
+
+          padding-left: 20px;
+        }
+
+        @media (min-width: 1264px) {
+          //lg
+
+          padding-left: 20px;
+        }
+
+        @media (min-width: 1904px) {
+          //xl
+
+          padding-left: 20px;
+        }
       }
     }
   }
